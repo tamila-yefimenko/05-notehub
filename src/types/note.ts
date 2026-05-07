@@ -6,3 +6,12 @@ export interface Note {
   updatedAt: string;
   tad: string;
 }
+
+export interface NotesHTTPResponce {
+  notes: Note[];
+  totalPages: number;
+}
+
+export type NoteTag = 'work' | 'personal' | 'meeting' | 'shopping' | 'todo';
+
+export type NoteSort = 'created' | 'updated';
