@@ -4,7 +4,7 @@ export interface Note {
   content: string;
   createdAt: string;
   updatedAt: string;
-  tad: string;
+  tag: NoteTag;
 }
 
 export interface NotesHTTPResponce {
