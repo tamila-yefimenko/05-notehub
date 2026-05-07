@@ -1,8 +1,16 @@
+import Pagination from '../Pagination/Pagination';
+import SearchBox from '../SearchBox/SearchBox';
+import css from './App.module.css';
+
 function App() {
   return (
-    <>
-      <div></div>
-    </>
+    <div className={css.app}>
+      <header className={css.toolbar}>
+        <SearchBox />
+        <Pagination />
+        <button>Create note +</button>
+      </header>
+    </div>
   );
 }
 
