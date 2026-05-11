@@ -14,7 +14,8 @@
     "@tanstack/react-query-devtools": "^5.100.9",
     "axios": "^1.15.2",
     "formik": "^2.4.9",
-    "react-dom": "^19.2.5",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "react-hot-toast": "^2.6.0",
     "react-paginate": "^8.3.0",
     "use-debounce": "^10.1.1",
@@ -36,6 +37,6 @@
     "globals": "^17.5.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
-    "vite": "^8.0.10"
+    "vite": "^8.0.12"
   }
 }
