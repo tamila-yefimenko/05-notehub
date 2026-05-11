@@ -33,11 +33,13 @@ function App() {
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox onChange={handleChange} />
-        <Pagination
-          totalPages={totalPages}
-          currentPage={currentPage}
-          onPageChange={setCurrentPage}
-        />
+        {totalPages > 0 && (
+          <Pagination
+            totalPages={totalPages}
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+          />
+        )}
         <button>Create note +</button>
       </header>
       {data && <NoteList notes={data.notes} />}
