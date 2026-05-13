@@ -3,8 +3,8 @@ import Pagination from '../Pagination/Pagination';
 import SearchBox from '../SearchBox/SearchBox';
 import css from './App.module.css';
 import NoteList from '../NoteList/NoteList';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { fetchNotes } from '../../services/noteService';
+import { keepPreviousData, useQuery, useMutation } from '@tanstack/react-query';
+import { deleteNote, fetchNotes } from '../../services/noteService';
 import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -22,11 +22,25 @@ function App() {
   const totalPages = data?.totalPages ?? 0;
 
   const handleChange = (query: string) => {
-    if (!query.trim) {
+    if (!query.trim()) {
       toast.error('Please, enter your search query!');
     }
     setSearchQuery(query.trim().toLowerCase());
     setCurrentPage(1);
+  };
+
+  const mutation = useMutation({
+    mutationFn: deleteNote,
+    onSuccess: () => {
+      return toast.success('Successfully deleted task');
+    },
+    onError: () => {
+      return toast.error('Error');
+    },
+  });
+
+  const handleDelete = (id: string) => {
+    mutation.mutate(id);
   };
 
   return (
@@ -42,7 +56,7 @@ function App() {
         )}
         <button>Create note +</button>
       </header>
-      {data && <NoteList notes={data.notes} />}
+      {data && <NoteList notes={data.notes} onDelete={handleDelete} />}
       {isLoading && <p>Loading</p>}
       {isError && <p>Error</p>}
       <Toaster />
