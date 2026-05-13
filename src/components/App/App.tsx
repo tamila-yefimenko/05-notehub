@@ -3,7 +3,12 @@ import Pagination from '../Pagination/Pagination';
 import SearchBox from '../SearchBox/SearchBox';
 import css from './App.module.css';
 import NoteList from '../NoteList/NoteList';
-import { keepPreviousData, useQuery, useMutation } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { deleteNote, fetchNotes } from '../../services/noteService';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -11,6 +16,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['query', searchQuery, currentPage],
@@ -32,6 +39,10 @@ function App() {
   const mutation = useMutation({
     mutationFn: deleteNote,
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['query', searchQuery, currentPage],
+      });
+
       return toast.success('Successfully deleted task');
     },
     onError: () => {
