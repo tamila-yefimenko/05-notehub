@@ -65,7 +65,7 @@ function App() {
             onPageChange={setCurrentPage}
           />
         )}
-        <button>Create note +</button>
+        <button className={css.button}>Create note +</button>
       </header>
       {data && <NoteList notes={data.notes} onDelete={handleDelete} />}
       {isLoading && <p>Loading</p>}
