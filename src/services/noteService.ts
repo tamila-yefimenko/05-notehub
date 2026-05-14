@@ -21,7 +21,10 @@ export const fetchNotes = async (search: string, page: number) => {
 export const createNote = async (note: string) => {
   const responce = await axios.post<Note>(
     'https://notehub-public.goit.study/api/notes',
-    note
+    note,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
   );
 
   return responce.data;
