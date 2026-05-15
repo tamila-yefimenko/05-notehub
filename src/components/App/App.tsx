@@ -11,8 +11,8 @@ import {
 } from '@tanstack/react-query';
 import { createNote, deleteNote, fetchNotes } from '../../services/noteService';
 import toast, { Toaster } from 'react-hot-toast';
-import NoteForm from '../NoteForm/NoteForm';
 import type { NewNote } from '../../types/note';
+import Modal from '../Modal/Modal';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -99,7 +99,7 @@ function App() {
       </header>
       {data && <NoteList notes={data.notes} onDelete={handleDelete} />}
       {formIsOpen && (
-        <NoteForm onClose={handleFormClose} onCreate={handleCreate} />
+        <Modal onClose={handleFormClose} onCreate={handleCreate} />
       )}
       {isLoading && <p>Loading</p>}
       {isError && <p>Error</p>}
