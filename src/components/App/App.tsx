@@ -11,17 +11,22 @@ import {
 } from '@tanstack/react-query';
 import { deleteNote, fetchNotes } from '../../services/noteService';
 import toast, { Toaster } from 'react-hot-toast';
+import NoteForm from '../NoteForm/NoteForm';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  const [formIsOpen, setFormIsOpen] = useState<boolean>(false);
+
+  const perPage = 12;
+
   const queryClient = useQueryClient();
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['query', searchQuery, currentPage],
-    queryFn: () => fetchNotes(searchQuery, currentPage),
+    queryKey: ['query', searchQuery, currentPage, perPage],
+    queryFn: () => fetchNotes(searchQuery, currentPage, perPage),
     enabled: searchQuery !== '',
     placeholderData: keepPreviousData,
   });
@@ -29,10 +34,12 @@ function App() {
   const totalPages = data?.totalPages ?? 0;
 
   const handleChange = (query: string) => {
-    if (!query.trim()) {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    if (!normalizedQuery) {
       toast.error('Please, enter your search query!');
     }
-    setSearchQuery(query.trim().toLowerCase());
+    setSearchQuery(normalizedQuery);
     setCurrentPage(1);
   };
 
@@ -54,6 +61,14 @@ function App() {
     mutation.mutate(id);
   };
 
+  const handleFormOpen = () => {
+    setFormIsOpen(true);
+  };
+
+  const handleFormClose = () => {
+    setFormIsOpen(false);
+  };
+
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
@@ -65,9 +80,12 @@ function App() {
             onPageChange={setCurrentPage}
           />
         )}
-        <button className={css.button}>Create note +</button>
+        <button className={css.button} onClick={handleFormOpen}>
+          Create note +
+        </button>
       </header>
       {data && <NoteList notes={data.notes} onDelete={handleDelete} />}
+      {formIsOpen && <NoteForm onClose={handleFormClose} />}
       {isLoading && <p>Loading</p>}
       {isError && <p>Error</p>}
       <Toaster />
