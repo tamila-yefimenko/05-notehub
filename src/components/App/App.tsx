@@ -35,10 +35,6 @@ function App() {
 
   const handleChange = (query: string) => {
     const normalizedQuery = query.trim().toLowerCase();
-
-    if (!normalizedQuery) {
-      toast.error('Please, enter your search query!');
-    }
     setSearchQuery(normalizedQuery);
     setCurrentPage(1);
   };
