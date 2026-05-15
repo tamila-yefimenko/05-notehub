@@ -40,13 +40,10 @@ const NoteForm = ({ onClose, onCreate }: NoteFormProps) => {
 
   const Schema = Yup.object().shape({
     title: Yup.string()
-      .min(2, 'Title must be at least 2 symbols')
-      .max(30, 'Too long')
+      .min(3, 'Title must be at least 2 symbols')
+      .max(50, 'Too long')
       .required('Title is required'),
-    content: Yup.string()
-      .min(2, 'Content must be at least 2 symbols')
-      .max(60, 'Too long')
-      .required('Content is required'),
+    content: Yup.string().max(500, 'Too long').required('Content is required'),
     tag: Yup.string()
       .oneOf(
         ['Work', 'Personal', 'Meeting', 'Shopping', 'Todo'],
