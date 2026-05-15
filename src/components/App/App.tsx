@@ -9,9 +9,10 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import { deleteNote, fetchNotes } from '../../services/noteService';
+import { createNote, deleteNote, fetchNotes } from '../../services/noteService';
 import toast, { Toaster } from 'react-hot-toast';
 import NoteForm from '../NoteForm/NoteForm';
+import type { NewNote } from '../../types/note';
 
 function App() {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -27,7 +28,6 @@ function App() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['query', searchQuery, currentPage, perPage],
     queryFn: () => fetchNotes(searchQuery, currentPage, perPage),
-    enabled: searchQuery !== '',
     placeholderData: keepPreviousData,
   });
 
@@ -57,8 +57,25 @@ function App() {
     },
   });
 
+  const mutationPost = useMutation({
+    mutationFn: createNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['query', searchQuery, currentPage],
+      });
+      return toast.success('Successfully created new task');
+    },
+    onError: () => {
+      return toast.error('Error');
+    },
+  });
+
   const handleDelete = (id: string) => {
     mutation.mutate(id);
+  };
+
+  const handleCreate = (newNote: NewNote) => {
+    mutationPost.mutate(newNote);
   };
 
   const handleFormOpen = () => {
@@ -85,7 +102,9 @@ function App() {
         </button>
       </header>
       {data && <NoteList notes={data.notes} onDelete={handleDelete} />}
-      {formIsOpen && <NoteForm onClose={handleFormClose} />}
+      {formIsOpen && (
+        <NoteForm onClose={handleFormClose} onCreate={handleCreate} />
+      )}
       {isLoading && <p>Loading</p>}
       {isError && <p>Error</p>}
       <Toaster />

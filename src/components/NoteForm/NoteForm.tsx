@@ -1,14 +1,22 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik, type FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 import css from './NoteForm.module.css';
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import type { NewNote, NoteTag } from '../../types/note';
 
 interface NoteFormProps {
   onClose: () => void;
+  onCreate: (newNote: NewNote) => void;
 }
 
-const NoteForm = ({ onClose }: NoteFormProps) => {
+interface FormValues {
+  title: string;
+  content: string;
+  tag: NoteTag;
+}
+
+const NoteForm = ({ onClose, onCreate }: NoteFormProps) => {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -25,10 +33,10 @@ const NoteForm = ({ onClose }: NoteFormProps) => {
     };
   }, [onClose]);
 
-  const initialValues = {
+  const initialValues: FormValues = {
     title: '',
     content: '',
-    tag: 'work',
+    tag: 'Work',
   };
 
   const Schema = Yup.object().shape({
@@ -48,11 +56,25 @@ const NoteForm = ({ onClose }: NoteFormProps) => {
       .required('Tag is required'),
   });
 
+  const handleSubmit = (
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ) => {
+    onCreate({
+      title: values.title,
+      content: values.content,
+      tag: values.tag,
+    });
+    actions.resetForm();
+
+    onClose();
+  };
+
   return createPortal(
     <div className={css.backdrop} onClick={onClose}>
       <Formik
         initialValues={initialValues}
-        onSubmit={() => {}}
+        onSubmit={handleSubmit}
         validationSchema={Schema}
       >
         <Form className={css.form} onClick={e => e.stopPropagation()}>
