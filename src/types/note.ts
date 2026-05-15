@@ -12,6 +12,12 @@ export interface NotesHTTPResponce {
   totalPages: number;
 }
 
-export type NoteTag = 'work' | 'personal' | 'meeting' | 'shopping' | 'todo';
+export interface NewNote {
+  title: string;
+  content: string;
+  tag: NoteTag;
+}
+
+export type NoteTag = 'Work' | 'Personal' | 'Meeting' | 'Shopping' | 'Todo';
 
 export type NoteSort = 'created' | 'updated';
